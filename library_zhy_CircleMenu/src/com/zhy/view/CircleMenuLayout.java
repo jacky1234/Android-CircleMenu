@@ -114,8 +114,7 @@ public class CircleMenuLayout extends ViewGroup {
         /**
          * 如果宽或者高的测量模式非精确值
          */
-        if (widthMode != MeasureSpec.EXACTLY
-                || heightMode != MeasureSpec.EXACTLY) {
+        if (widthMode != MeasureSpec.EXACTLY || heightMode != MeasureSpec.EXACTLY) {
             // 主要设置为背景图的高度
             resWidth = getSuggestedMinimumWidth();
             // 如果未设置背景图片，则设置为屏幕宽高的默认值
@@ -145,9 +144,7 @@ public class CircleMenuLayout extends ViewGroup {
         for (int i = 0; i < count; i++) {
             final View child = getChildAt(i);
 
-            if (child.getVisibility() == GONE) {
-                continue;
-            }
+            if (child.getVisibility() == GONE) { continue; }
 
             // 计算menu item的尺寸；以及和设置好的模式，去对item进行测量
             int makeMeasureSpec = -1;
@@ -173,7 +170,6 @@ public class CircleMenuLayout extends ViewGroup {
      */
     public interface OnMenuItemClickListener {
         void itemClick(View view, int pos);
-
         void itemCenterClick(View view);
     }
 
@@ -197,8 +193,6 @@ public class CircleMenuLayout extends ViewGroup {
      */
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        int layoutRadius = 2 * mRadius;
-
         // Laying out the child views
         final int childCount = getChildCount();
 
@@ -209,34 +203,29 @@ public class CircleMenuLayout extends ViewGroup {
         // 根据menu item的个数，计算角度
         float angleDelay = 0;
         if (childCount > 1) {
-            angleDelay = 360 / (childCount - 1);
+            angleDelay = 360 / (childCount - 1);    //1->代表中间的view
         }
 
         // 遍历去设置menuitem的位置
         for (int i = 0; i < childCount; i++) {
             final View child = getChildAt(i);
 
-            if (child.getId() == R.id.id_circle_menu_item_center)
+            if (child.getId() == R.id.id_circle_menu_item_center
+                    || child.getVisibility() == GONE)
                 continue;
-
-            if (child.getVisibility() == GONE) {
-                continue;
-            }
 
             mStartAngle %= 360;
 
             // 计算，中心点到menu item中心的距离
-            float tmp = layoutRadius / 2f - cWidth / 2 - mPadding;
+            float tmp = mRadius - cWidth / 2 - mPadding;
 
             // tmp cosa 即menu item中心点的横坐标
-            left = layoutRadius
-                    / 2
+            left = mRadius
                     + (int) Math.round(tmp
                     * Math.cos(Math.toRadians(mStartAngle)) - 1 / 2f
                     * cWidth);
             // tmp sina 即menu item的纵坐标
-            top = layoutRadius
-                    / 2
+            top = mRadius
                     + (int) Math.round(tmp
                     * Math.sin(Math.toRadians(mStartAngle)) - 1 / 2f
                     * cWidth);
@@ -410,9 +399,7 @@ public class CircleMenuLayout extends ViewGroup {
         if (resIds != null && texts != null) {
             mMenuItemCount = Math.min(resIds.length, texts.length);
         }
-
         addMenuItems();
-
     }
 
     /**
